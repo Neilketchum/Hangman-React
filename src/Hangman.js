@@ -21,6 +21,7 @@ class Hangman extends Component {
     this.state = { nWrong: 0, guessed: new Set(), answer: randomWord() };
     this.handleGuess = this.handleGuess.bind(this);
     this.reset = this.reset.bind(this)
+    this.checkDisabled = this.checkDisabled.bind(this)
   }
   reset(){
     // this.setState({
@@ -51,7 +52,9 @@ class Hangman extends Component {
       nWrong: st.nWrong + (st.answer.includes(ltr) ? 0 : 1)
     }));
   }
-
+  checkDisabled(){
+      return this.guessedWord().join('')=== this.state.answer
+  }
   /** generateButtons: return array of letter buttons to render */
   generateButtons() {
     return "abcdefghijklmnopqrstuvwxyz".split("").map((ltr,index) => (
@@ -59,7 +62,7 @@ class Hangman extends Component {
         key ={index}
         value={ltr}
         onClick={this.handleGuess}
-        disabled={this.state.guessed.has(ltr)}
+        disabled={this.state.guessed.has(ltr)||this.checkDisabled()}
       >
         {ltr}
       </button>
@@ -77,7 +80,7 @@ class Hangman extends Component {
               <h4>Guessed Wrong :- {this.state.nWrong}</h4>
               <p className='Hangman-word'>{!isGameOver ?this.guessedWord():this.state.answer}</p>
               <p className='Hangman-btns'>
-                  { !isGameOver||win ? this.generateButtons():<h3>You Loose</h3> }
+                  { !isGameOver? this.generateButtons():<h3>You Loose</h3> }
               </p>          
               <h1>{win?'You Win':''}</h1>
               <button id = 'reset' onClick ={this.reset}>Restart?</button>
